@@ -1,0 +1,20 @@
+﻿@model IEnumerable<ejemplo_aspnet.Models.Product>
+@{
+    ViewBag.Title = "Comparador";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Comparador</h2>
+
+<p>Los productos son: @ViewBag.Message</p>
+
+<table class="table table-bordered table-responsive table-hover">
+    @foreach (var item in Model)
+            {
+                <tr> 
+                    <td>@if (item.ID_Supermarket == 0){ <p>Carrefour</p> } <br/> @Html.DisplayFor(modelItem => item.Name) 
+                    <br/>  @Html.DisplayFor(modelItem => item.Price)€   <a href="@Html.DisplayFor(modelItem => item.Link)">Ver en Web</a>
+                     </td>
+                </tr>
+            }
+</table>

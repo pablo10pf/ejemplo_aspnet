@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<h2>WELCOME</h2>
+<p>Hola desde la vista de ejemplo</p>
+
+<h2>Esta es la pantalla inicio del comparador</h2>
+
+@using (Html.BeginForm("Comparador","HelloWorld", FormMethod.Get)){
+    <p>Escriba los productos</p>
+    <p>
+        @Html.TextArea("productString", new { rows = 10, cols = 40, @class = "form-control", @style = "resize: none;" }) <br />
+        <input type="submit" value="Buscar" />
+    </p>
+}
+
