@@ -101,14 +101,18 @@ namespace ejemplo_aspnet.Controllers
 
                 Product p = new Product();
                 var product = driver.FindElement(By.ClassName("ebx-result__wrapper"));
-                //p.Price = double.Parse(product.FindElement(By.ClassName("ebx-result-price")).Text.Trim());
-                var precio = product.FindElement(By.XPath("//strong[@class='ebx-result-price__value']")).Text;
+                p.Name = product.FindElement(By.ClassName("ebx-result-title")).GetAttribute("innerText");
+                //p.Name = product.FindElements(By.TagName("a")).ElementAt(1).FindElement(By.ClassName("ebx-result-title")).Text;
 
+                //p.Price = double.Parse(product.FindElement(By.ClassName("ebx-result-price")).Text);
+                //var precio = product.FindElement(By.XPath("//strong[@class='ebx-result-price__value']")).Text;
+
+                string [] v = product.FindElement(By.TagName("p")).FindElement(By.ClassName("ebx-result-price__value")).GetAttribute("innerText").Split(' ');
 
 
                 //string [] price = product.FindElement(By.ClassName("ebx-result-price__value")).Text.Split(' ');
-                p.Price = double.Parse(precio);
-                p.Name = product.FindElement(By.ClassName("ebx-result-title")).Text;
+                p.Price = double.Parse(v[0]);
+
                 p.Link = product.FindElement(By.TagName("a")).GetAttribute("href");
                 p.ID_Supermarket = (int)SuperMarkets.Carrefour;
                 db.Products.Add(p);
