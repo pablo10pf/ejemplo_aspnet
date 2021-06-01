@@ -10,7 +10,8 @@ namespace ejemplo_aspnet.Models
     {
         Carrefour = 0,
         Mercadona = 1,
-        CorteIngles = 2
+        CorteIngles = 2,
+        Alcampo = 3
     }
     public class Product
     {
