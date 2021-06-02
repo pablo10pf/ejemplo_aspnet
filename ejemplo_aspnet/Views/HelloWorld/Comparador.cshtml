@@ -13,9 +13,19 @@
             {
                 <tr> 
                     <td>
-                        @Html.DisplayFor(modelItem => item.ID_Supermarket)
-                        <br /> @Html.DisplayFor(modelItem => item.Name)
-                        <br />  @Html.DisplayFor(modelItem => item.Price)€   <a target="_blank" href="@Html.DisplayFor(modelItem => item.Link)">Ver en Web</a>
+                        @if (item.Name == "ERROR")
+                        {
+                            <p> No hay resultados </p>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.ID_Supermarket)
+                            <br /> @Html.DisplayFor(modelItem => item.Name)
+                            <br /> @Html.DisplayFor(modelItem => item.Price)  <a target="_blank" href="@Html.DisplayFor(modelItem => item.Link)">Ver en Web</a>
+                        }
+
+                      
+
                     </td>
                 </tr>
             }
