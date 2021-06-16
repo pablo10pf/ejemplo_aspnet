@@ -32,22 +32,21 @@ namespace ejemplo_aspnet.Controllers
         //GET: HelloWorld/Comparador
         public ActionResult Comparador(string productString)
         {
-            ViewBag.Message = productString;
+            ViewBag.Message = productString.Replace('\n', ',');
             //return View("Comparador",ConvertProductStringToProductList(productString));
-            ConvertProductStringToProductList(productString);
+            Scrap(productString);
             return View("Comparador", db.Products.ToList());
         }
 
-        private List<string> ConvertProductStringToProductList(string productString)
+        private void Scrap(string productString)
         {
             List<string> productList = productString.Split('\n').ToList();
             db.Products.RemoveRange(db.Products);
             
-            //ScrapCarrefour(productList);
+            ScrapCarrefour(productList);
             ScrapMercadona(productList);
-            //ScrapCorteIngles(productList);
-            //ScrapAlcampo(productList);
-            return productList;
+            ScrapCorteIngles(productList);
+            ScrapAlcampo(productList);
         }
 
 
@@ -58,14 +57,14 @@ namespace ejemplo_aspnet.Controllers
             foreach (var prod in prods)
             {
                 driver.Navigate().GoToUrl(URL+prod);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 //var inputSearchCarrefour = driver.FindElement(By.XPath("//div[@class='search-bar']/input"));
                 //inputSearchCarrefour.SendKeys("atun");
 
 
                 if(driver.FindElements(By.ClassName("ebx-no-results")).Count > 0)
                 {
-                    saveProduct("ERROR", "", 0, (int)SuperMarkets.Carrefour);
+                    saveProduct(prod, "ERROR", 0, (int)SuperMarkets.Carrefour);
                 }
                 else
                 {
@@ -86,7 +85,7 @@ namespace ejemplo_aspnet.Controllers
             string URL = "https://tienda.mercadona.es/";
             IWebDriver driver = new ChromeDriver();
             driver.Navigate().GoToUrl(URL);
-            Thread.Sleep(1000);
+            Thread.Sleep(300);
             //var inputPostalCode = driver.FindElement(By.Name("postalCode"));
             //inputPostalCode.SendKeys("46001");
             //inputPostalCode.Submit();
@@ -97,10 +96,10 @@ namespace ejemplo_aspnet.Controllers
 
                 var inputSearch = driver.FindElement(By.Id("search"));
                 inputSearch.SendKeys(prod);
-                Thread.Sleep(1000);
+                Thread.Sleep(300);
 
                 if (driver.FindElements(By.XPath("//div[@class='search-no-results']")).Count > 0 ) {
-                    saveProduct("ERROR", "", 0, (int)SuperMarkets.Mercadona);
+                    saveProduct(prod, "ERROR", 0, (int)SuperMarkets.Mercadona);
                 }
                 else{
                     var product = driver.FindElement(By.XPath("//div[@class='product-container']/div/button/div[@class='product-cell__info']"));
@@ -137,11 +136,11 @@ namespace ejemplo_aspnet.Controllers
                 /*var inputSearch = driver.FindElement(By.Name("term"));
                 inputSearch.SendKeys("atun");
                 inputSearch.Submit();*/
-                Thread.Sleep(1000);
+                Thread.Sleep(300);
 
                 if (driver.FindElements(By.ClassName("inplace_notification")).Count > 0)
                 {
-                    saveProduct("ERROR", "", 0, (int)SuperMarkets.CorteIngles);
+                    saveProduct(prod, "ERROR", 0, (int)SuperMarkets.CorteIngles);
                 }
                 else
                 {
@@ -164,7 +163,7 @@ namespace ejemplo_aspnet.Controllers
             {
                 IWebDriver driver = new ChromeDriver();
                 driver.Navigate().GoToUrl(URL + prod);
-                Thread.Sleep(1000);
+                Thread.Sleep(300);
                 /*var inputSearch = driver.FindElement(By.Id("search"));
                 inputSearch.SendKeys("atun");
                 inputSearch.Submit();*/
@@ -174,7 +173,7 @@ namespace ejemplo_aspnet.Controllers
 
                 if (driver.FindElements(By.ClassName("titleNoResult")).Count > 0)
                 {
-                    saveProduct("ERROR", "", 0, (int)SuperMarkets.Alcampo);
+                    saveProduct(prod, "ERROR", 0, (int)SuperMarkets.Alcampo);
                 }
                 else
                 {
