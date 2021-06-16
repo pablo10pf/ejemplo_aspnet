@@ -32,7 +32,7 @@ namespace ejemplo_aspnet.Controllers
         //GET: HelloWorld/Comparador
         public ActionResult Comparador(string productString)
         {
-            ViewBag.Message = "Productos: " + productString;
+            ViewBag.Message = productString;
             //return View("Comparador",ConvertProductStringToProductList(productString));
             ConvertProductStringToProductList(productString);
             return View("Comparador", db.Products.ToList());
@@ -43,10 +43,10 @@ namespace ejemplo_aspnet.Controllers
             List<string> productList = productString.Split('\n').ToList();
             db.Products.RemoveRange(db.Products);
             
-            ScrapCarrefour(productList);
+            //ScrapCarrefour(productList);
             ScrapMercadona(productList);
             //ScrapCorteIngles(productList);
-            ScrapAlcampo(productList);
+            //ScrapAlcampo(productList);
             return productList;
         }
 
@@ -86,7 +86,7 @@ namespace ejemplo_aspnet.Controllers
             string URL = "https://tienda.mercadona.es/";
             IWebDriver driver = new ChromeDriver();
             driver.Navigate().GoToUrl(URL);
-            //Thread.Sleep(1000);
+            Thread.Sleep(1000);
             //var inputPostalCode = driver.FindElement(By.Name("postalCode"));
             //inputPostalCode.SendKeys("46001");
             //inputPostalCode.Submit();
@@ -107,10 +107,9 @@ namespace ejemplo_aspnet.Controllers
                     string[] v = product.FindElement(By.XPath("//div[@class='product-price']")).Text.Split(' ');
 
                     saveProduct(product.FindElement(By.XPath("//h4")).Text,
-                        "", double.Parse(v[0]), (int)SuperMarkets.Mercadona);
+                        URL+"search-results?query="+prod, double.Parse(v[0]), (int)SuperMarkets.Mercadona);
                 }
                 
-
                 //driver.FindElement(By.ClassName("product-cell__content-link")).Click();
 
                 
@@ -129,9 +128,10 @@ namespace ejemplo_aspnet.Controllers
         {
             string URL = "https://www.elcorteingles.es/supermercado/"+"buscar/?term=";
             //string URL = "https://www.elcorteingles.es/supermercado/";
-            IWebDriver driver = new ChromeDriver();
+            
             foreach (var prod in prods)
             {
+                IWebDriver driver = new ChromeDriver();
                 driver.Navigate().GoToUrl(URL+prod);
                 
                 /*var inputSearch = driver.FindElement(By.Name("term"));
@@ -139,28 +139,21 @@ namespace ejemplo_aspnet.Controllers
                 inputSearch.Submit();*/
                 Thread.Sleep(1000);
 
+                if (driver.FindElements(By.ClassName("inplace_notification")).Count > 0)
+                {
+                    saveProduct("ERROR", "", 0, (int)SuperMarkets.CorteIngles);
+                }
+                else
+                {
+                    var product = driver.FindElement(By.ClassName("grid-item"));
+                    string[] v = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/div/div/div")).Text.Split(' ');
 
-                var product = driver.FindElement(By.ClassName("grid-item"));
-                string[] v = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/div/div/div")).Text.Split(' ');
-                /*var price = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/div/div/div")).Text;
-                var name = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h3")).Text;
-                var link = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h3/a")).GetAttribute("href");*/
-                // "div[@class='product_tile-description']"));
-
-                saveProduct(product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h3")).Text, 
-                    product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h3/a")).GetAttribute("href"),
-                    double.Parse(v[0]), (int)SuperMarkets.CorteIngles);
-
-                /*Product p = new Product();
-                p.Name = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h3")).Text;
-                p.Link = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h3/a")).GetAttribute("href");
-                string[] v = product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/div/div/div")).Text.Split(' ');
-                p.Price = double.Parse(v[0]);
-                p.ID_Supermarket = (int)SuperMarkets.CorteIngles;
-                db.Products.Add(p);
-                db.SaveChanges();*/
+                    saveProduct(product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h4")).Text,
+                        product.FindElement(By.XPath("//div[@class='product_tile-right_container']/div/h4/a")).GetAttribute("href"),
+                        double.Parse(v[0]), (int)SuperMarkets.CorteIngles);
+                }
+                driver.Quit();
             }
-            driver.Quit();
         }
 
         private void ScrapAlcampo(List<string> prods)
