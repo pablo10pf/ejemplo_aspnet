@@ -8,7 +8,7 @@
 
 <h2>Bienvenido al COMPARADOR de precios en supermercados</h2>
 
-@using (Html.BeginForm("Comparador","HelloWorld", FormMethod.Get)){
+@using (Html.BeginForm("Comparator", "Comparator", FormMethod.Get)){
     <p style="font-size: 18px">Escriba los productos que desea buscar.<br /> Por favor, escriba cada producto en una linea.</p>
     <p>
         @Html.TextArea("productString", new { rows = 10, cols = 100, @class = "form-control", @style = "resize: none;font-size: 20px" }) <br />

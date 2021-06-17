@@ -12,7 +12,7 @@ using System.Drawing;
 
 namespace ejemplo_aspnet.Controllers
 {
-    public class HelloWorldController : Controller
+    public class ComparatorController : Controller
     {
         private ProductDBContext db = new ProductDBContext();
 
@@ -29,13 +29,13 @@ namespace ejemplo_aspnet.Controllers
             return View();
         }
 
-        //GET: HelloWorld/Comparador
-        public ActionResult Comparador(string productString)
+        //GET: HelloWorld/Comparator
+        public ActionResult Comparator(string productString)
         {
             ViewBag.Message = productString.Replace('\n', ',');
             //return View("Comparador",ConvertProductStringToProductList(productString));
             Scrap(productString);
-            return View("Comparador", db.Products.ToList());
+            return View("Comparator", db.Products.ToList());
         }
 
         private void Scrap(string productString)
@@ -96,7 +96,7 @@ namespace ejemplo_aspnet.Controllers
 
                 var inputSearch = driver.FindElement(By.Id("search"));
                 inputSearch.SendKeys(prod);
-                Thread.Sleep(300);
+                Thread.Sleep(500);
 
                 if (driver.FindElements(By.XPath("//div[@class='search-no-results']")).Count > 0 ) {
                     saveProduct(prod, "ERROR", 0, (int)SuperMarkets.Mercadona);
