@@ -7,12 +7,27 @@
 
 
 <h2>Bienvenido al COMPARADOR de precios en supermercados</h2>
-
-@using (Html.BeginForm("Comparator", "Comparator", FormMethod.Get)){
-    <p style="font-size: 18px">Escriba los productos que desea buscar.<br /> Por favor, escriba cada producto en una linea.</p>
-    <p>
-        @Html.TextArea("productString", new { rows = 10, cols = 100, @class = "form-control", @style = "resize: none;font-size: 20px" }) <br />
-        <input type="submit" value="Buscar" class="btn btn-primary btn-sm" style="font-size: 16px" />
-    </p>
-}
-
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2">
+            <img src="https://www.carrefour.es/_includes/multimedia/es/btnFiltro1_tcm5-28159.png" width="70" height="60">
+        </div>
+        <div class="col-lg-2">
+            <img src="https://media.glassdoor.com/sqll/28359/mercadona-squarelogo.png" width="60" height="60">
+        </div>
+        <div class="col-lg-2">
+            <img src="https://cdn.grupoelcorteingles.es/statics/supermarket/assets/stylesheets/images/food/logos/supermarket-es-short.svg" width="100" height="70">
+        </div>
+        <div class="col-lg-2">
+            <img src="https://www.alcampo.es/compra-online/_ui/desktop/theme-alcampo/images/ux-pictogramas/logo-rojo.svg" width="100" height="40">
+        </div>
+    </div>
+</div>
+        @using (Html.BeginForm("Comparator", "Comparator", FormMethod.Get))
+        {
+            <p style="font-size: 18px">Escriba los productos que desea buscar.<br /> Por favor, escriba cada producto en una linea.</p>
+            <p>
+                @Html.TextArea("productString", new { rows = 10, cols = 500, @class = "form-control", @style = "resize: none;font-size: 20px;min-width: 80%" }) <br />
+                <input type="submit" value="Buscar" class="btn btn-primary btn-sm" style="font-size: 16px" />
+            </p>
+        }
